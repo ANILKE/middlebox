@@ -2,6 +2,7 @@ import os
 import socket
 import time
 
+
 def udp_sender():
     host = os.getenv('INSECURENET_HOST_IP')
     port = 8888
@@ -31,6 +32,7 @@ def udp_sender():
         print(f"An error occurred: {e}")
     finally:
         sock.close()
+
 
 if __name__ == "__main__":
     udp_sender()
