@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 from nats.aio.client import Client as NATS
 import os
@@ -5,7 +6,8 @@ import random
 from scapy.all import Ether
 
 
-async def run():
+async def run(mean_value):
+    print(f"Mean value for random delay: {mean_value}")
     nc = NATS()
 
     nats_url = os.getenv("NATS_SURVEYOR_SERVERS", "nats://nats:4222")
@@ -18,7 +20,7 @@ async def run():
         packet = Ether(data)
         print(packet.show())
         # Publish the received message to outpktsec and outpktinsec
-        delay = random.expovariate(1 / 5e-6)
+        delay = random.expovariate(1 / mean_value)
         await asyncio.sleep(delay)
         if subject == "inpktsec":
             await nc.publish("outpktinsec", msg.data)
@@ -40,4 +42,7 @@ async def run():
 
 
 if __name__ == '__main__':
-    asyncio.run(run())
+    parser = argparse.ArgumentParser(description="Python Processor")
+    parser.add_argument("--mean_value", type=float, default=5e-6, help="Mean value for random delay")
+    args = parser.parse_args()
+    asyncio.run(run(args.mean_value))
