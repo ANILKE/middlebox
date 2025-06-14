@@ -44,7 +44,7 @@ def start_covert_channel_sender(args):
         for bit in bitstream:
             # Send multiple packets for each bit (for takea an average in receiver to tolarete other random delays added(like processer))
             for _ in range(bit_repeat_len):
-                sock.sendto(f"bit:{bit}".encode(), (host, port))
+                sock.sendto("dummy data".encode(), (host, port))
                 print(f"Sent bit {bit}")
                 time.sleep(BIT_DELAY[bit])
 
